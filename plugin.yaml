@@ -1,0 +1,16 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ConfigManagementPlugin
+metadata:
+  name: avp
+spec:
+  version: v1
+  allowConcurrency: true
+  discover:
+    fileName: "*.yaml"
+  generate:
+    command:
+      - /usr/local/bin/argocd-vault-plugin
+      - generate
+      - "."
+  provideGitCreds: true
+  preserveFileMode: false

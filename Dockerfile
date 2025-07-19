@@ -21,17 +21,11 @@ RUN curl -sL \
 RUN mkdir -p /home/argocd/cmp-server/config /home/argocd/cmp-server/plugins && \
     chown -R 999:999 /home/argocd/cmp-server
 
-# build our entrypoint
-RUN cat << 'EOF' > /usr/local/bin/entrypoint.sh
-#!/usr/bin/env sh
-# launch cmp-server in background, binding its socket
-exec /var/run/argocd/argocd-cmp-server avp \
-  --config-dir-path=/home/argocd/cmp-server/config \
-  --socket-path=/home/argocd/cmp-server/plugins/avp.sock &
+# 3) Copy your plugin.yaml into the baked config dir
+COPY --chown=999:999 plugin.yaml /home/argocd/cmp-server/config/plugin.yaml
 
-# now hand off to the real repo-server
-exec argocd-repo-server "$@"
-EOF
+# 4) Entrypoint: start CMP sidecar then repo-server
+COPY entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh
 
 USER 999
