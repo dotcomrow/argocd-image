@@ -1,8 +1,10 @@
 #!/usr/bin/env sh
-# launch CMP server in background, binding its socket
-exec /var/run/argocd/argocd-cmp-server avp \
-  --config-dir-path=/home/argocd/cmp-server/config \
-  --socket-path=/home/argocd/cmp-server/plugins/avp.sock &
+set -e
 
-# now run the real repo-server
-exec argocd-repo-server "$@"
+# 1) start the CMP sidecar in the background, pointing at your baked-in config/plugin.yaml
+/usr/local/bin/argocd-cmp-server avp \
+    --config-dir-path=/home/argocd/cmp-server/config \
+    --socket-path=/home/argocd/cmp-server/plugins/avp-v1.sock &
+
+# 2) now replace this process with the real repo-server
+exec /usr/local/bin/argocd repo-server "$@"
