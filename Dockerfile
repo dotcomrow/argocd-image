@@ -1,4 +1,4 @@
-FROM argoproj/argocd:latest
+FROM quay.io/argoproj/argocd:v2.8.2
 
 USER root
 
@@ -43,4 +43,4 @@ RUN chmod +x /usr/local/bin/entrypoint.sh
 USER 999
 
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
-CMD ["repo-server"]
+CMD ["argocd-repo-server"]
