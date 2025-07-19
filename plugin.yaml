@@ -1,16 +1,20 @@
 apiVersion: argoproj.io/v1alpha1
 kind: ConfigManagementPlugin
 metadata:
-  name: avp
+  name: avp-v1                         
 spec:
   version: v1
-  allowConcurrency: true
-  discover:
-    fileName: "*.yaml"
+  init:
+    command: ["/bin/sh","-c"]
+    args: ["test -S /home/argocd/cmp-server/plugins/avp-v1.sock"]
   generate:
     command:
       - /usr/local/bin/argocd-vault-plugin
+    args:
       - generate
-      - "."
+      - .
+      - --config-path=/home/argocd/cmp-server/config/vault-config.yaml
+    socket: /home/argocd/cmp-server/plugins/avp-v1.sock
+  allowConcurrency: true
   provideGitCreds: true
   preserveFileMode: false
