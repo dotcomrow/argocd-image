@@ -18,7 +18,7 @@ RUN curl -sL \
     chmod +x /usr/local/bin/argocd-vault-plugin
 
 # prepare plugin dirs
-RUN mkdir -p /home/argocd/cmp-server/{config,plugins} && \
+RUN mkdir -p /home/argocd/cmp-server/config /home/argocd/cmp-server/plugins && \
     chown -R 999:999 /home/argocd/cmp-server
 
 # build our entrypoint
