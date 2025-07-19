@@ -23,8 +23,23 @@ RUN curl -sL \
       -o /usr/local/bin/argocd-vault-plugin && \
     chmod +x /usr/local/bin/argocd-vault-plugin
 
-# prep CMP socket dir
-RUN mkdir -p /home/argocd/cmp-server/plugins && \
+# create plugin dirs
+RUN mkdir -p /home/argocd/cmp-server/{config,plugins} && \
     chown -R 999:999 /home/argocd/cmp-server
 
+# entrypoint wrapper
+COPY << 'EOF' /usr/local/bin/entrypoint.sh
+#!/usr/bin/env sh
+# start CMP server in the background
+exec /var/run/argocd/argocd-cmp-server avp \
+   --config-dir-path=/home/argocd/cmp-server/config \
+   --socket-path=/home/argocd/cmp-server/plugins/avp.sock &
+
+# now run the real repo-server
+exec argocd-repo-server "$@"
+EOF
+RUN chmod +x /usr/local/bin/entrypoint.sh
+
 USER 999
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
+CMD ["repo-server"]
