@@ -1,4 +1,4 @@
-FROM argoproj/argocd:v2.7.9
+FROM argoproj/argocd:latest
 
 # Switch to root so we can install packages
 USER root
