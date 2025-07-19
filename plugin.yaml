@@ -4,14 +4,19 @@ metadata:
   name: avp-v1
 spec:
   allowConcurrency: true
+
+  # tell ArgoCD “if you see any *.yaml under the repo root, invoke me”
   discover:
     fileName: "*.yaml"
+
   generate:
     command:
       - /usr/local/bin/argocd-vault-plugin
     args:
       - generate
-      - .
-      - --config-path=/home/argocd/cmp-server/config/vault-config.yaml
+      - .                   # the “path” argument
+      - -c                  # short flag for --config-path
+      - /home/argocd/cmp-server/config/vault-config.yaml
+
   provideGitCreds: true
   preserveFileMode: false
