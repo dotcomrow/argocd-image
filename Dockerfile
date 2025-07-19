@@ -31,4 +31,4 @@ RUN chmod +x /usr/local/bin/entrypoint.sh
 USER 999
 
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
-CMD ["argocd-repo-server"]
+CMD []
