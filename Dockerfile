@@ -2,12 +2,6 @@ FROM quay.io/argoproj/argocd:v2.8.2
 
 USER root
 
-# redirect all of Impish's dead endpoints to old-releases
-RUN sed -i \
-      -e 's|http://archive.ubuntu.com/ubuntu|http://old-releases.ubuntu.com/ubuntu|g' \
-      -e 's|http://security.ubuntu.com/ubuntu|http://old-releases.ubuntu.com/ubuntu|g' \
-      -e 's|http://ports.ubuntu.com/ubuntu-ports|http://old-releases.ubuntu.com/ubuntu|g' \
-    /etc/apt/sources.list
 
 # now apt will work on both amd64 and arm64
 RUN apt-get update && \
