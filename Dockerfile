@@ -3,6 +3,13 @@ FROM argoproj/argocd:latest
 # Switch to root so we can install packages
 USER root
 
+# point to old-releases.ubuntu.com for EOL Ubuntu Impish
+RUN sed -i \
+      -e 's|http://archive.ubuntu.com/ubuntu|http://old-releases.ubuntu.com/ubuntu|g' \
+      -e 's|http://security.ubuntu.com/ubuntu|http://old-releases.ubuntu.com/ubuntu|g' \
+    /etc/apt/sources.list
+
+
 # Install curl, awscli, gpg + certs, then clean up
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
