@@ -14,7 +14,6 @@ spec:
       - /usr/local/bin/argocd-vault-plugin
     args:
       - generate
-      - --config-path=/home/argocd/cmp-server/config/vault-config.yaml
       - .
 
   provideGitCreds: true
