@@ -14,9 +14,8 @@ spec:
       - /usr/local/bin/argocd-vault-plugin
     args:
       - generate
-      - .                   # the “path” argument
-      - -c                  # short flag for --config-path
-      - /home/argocd/cmp-server/config/vault-config.yaml
+      - --config-path=/home/argocd/cmp-server/config/vault-config.yaml
+      - .
 
   provideGitCreds: true
   preserveFileMode: false
