@@ -5,5 +5,6 @@ set -e
 #    'avp-v1' must match your plugin.yaml metadata.name
 /usr/local/bin/argocd-cmp-server avp-v1 &
 
-# 2) now replace this shell with the real repo-server process
-exec /usr/local/bin/argocd-repo-server "$@"
+# 2) now replace this shell with whatever command Kubernetes passed in
+#    (usually /usr/local/bin/argocd-repo-server and its args)
+exec "$@"

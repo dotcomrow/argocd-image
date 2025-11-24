@@ -20,11 +20,16 @@ RUN curl -sL \
       -o /usr/local/bin/argocd-vault-plugin && \
     chmod +x /usr/local/bin/argocd-vault-plugin
 
+# Wire up the CMP plugin definition and entrypoint
+RUN mkdir -p /home/argocd/cmp-server/config /home/argocd/cmp-server/plugins
+COPY plugin.yaml /home/argocd/cmp-server/config/plugin.yaml
+COPY entrypoint.sh /usr/local/bin/cmp-entrypoint.sh
+RUN chmod 755 /usr/local/bin/cmp-entrypoint.sh && \
+    chown -R 999:999 /home/argocd/cmp-server
+
 # Drop back to the argocd user (UID 999) as expected by Argo CD
 USER 999
 
-# IMPORTANT:
-# - Do NOT override ENTRYPOINT or CMD.
-# - The base image already starts argocd-repo-server.
-# - Argo CD will invoke /usr/local/bin/argocd-vault-plugin according to your
-#   configManagementPlugins definition in argocd-cm.
+# Start Tini -> cmp server -> repo server
+ENTRYPOINT ["/usr/bin/tini", "--", "/usr/local/bin/cmp-entrypoint.sh"]
+CMD ["/usr/local/bin/argocd-repo-server"]
